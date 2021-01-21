@@ -1,0 +1,4 @@
+{
+  "domain": "https://localhost:5001/",
+  "apiEndpoint": "https://localhost:5001/api/v1/"
+}
