@@ -14,6 +14,11 @@ class ApiPost extends ForumApi {
     const { data } = await this.api.post("auth/register", user);
     return data;
   }
+
+  async createPost(post) {
+    const { data } = await this.api.post("posts", post);
+    return data;
+  }
 }
 
 export default new ApiPost(apiEndpoint);

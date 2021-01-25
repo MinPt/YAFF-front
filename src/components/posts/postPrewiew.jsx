@@ -17,7 +17,7 @@ const PostPreview = ({ title, body, author, likesCount, dateAdded, id }) => {
       <li className="list-group-item">
         <div className="">
           <div className="d-flex align-baseline">
-            <p>Posted by /u{author.nickName}</p>
+            <p>Posted by /u {author.userName}</p>
             <Avatar {...author} />
             <p>Posted : {normalizeDate(dateAdded)}</p>
           </div>

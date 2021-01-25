@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import Like from "../common/like";
 import Avatar from "../common/avatar";
 import ReactMarkdown from "react-markdown";
+import normalizeDate from "../../utilities/toHumanFriendlyDate";
 
 class Post extends Component {
   state = {
@@ -24,7 +25,7 @@ class Post extends Component {
   }
 
   render() {
-    const { title, body, author, likesCount, datePosted, id } = this.state.post;
+    const { title, body, author, likesCount, dateAdded, id } = this.state.post;
 
     return (
       (this.state.isLoaded && (
@@ -34,10 +35,10 @@ class Post extends Component {
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                   <h3>{title}</h3>
-                  <p>{datePosted}</p>
+                  <p>{normalizeDate(dateAdded)}</p>
                   <Avatar {...author} />
                 </div>
-                <p>{author.nickName}</p>
+                <p>{author.userName}</p>
               </div>
               <div>
                 <ReactMarkdown>{body}</ReactMarkdown>
