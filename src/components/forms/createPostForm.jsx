@@ -1,10 +1,12 @@
-import React, { Component } from "react";
-import Form from "../common/form";
+import React from "react";
+import GlobalForm from "../common/globalForm";
 import ReactMde from "react-mde";
-import * as Showdown from "showdown";
 import api from "../../gateways/CRADops/apiPost";
+import * as Showdown from "showdown";
+import * as yup from "yup";
+import Input from "../common/input";
 
-class CreatePostForm extends Form {
+class CreatePostForm extends GlobalForm {
   state = {
     data: {
       body: "",
@@ -17,7 +19,24 @@ class CreatePostForm extends Form {
       strikethrough: true,
       tasklists: true,
     }),
+    inputFields: [
+      <Input type="text" name="title" label="Title" />,
+      <ReactMde
+        value={this.state.data.body}
+        onChange={(value) => this.handleMarkdownChange(value)}
+        selectedTab={this.state.selectedTab}
+        onTabChange={(tab) => this.handleTabChange(tab)}
+        generateMarkdownPreview={(markdown) =>
+          Promise.resolve(this.state.converter.makeHtml(markdown))
+        }
+      />,
+    ],
   };
+
+  schema = yup.object().shape({
+    body: yup.string().required().min(100),
+    title: yup.string().required().min(15),
+  });
 
   handleMarkdownChange(value) {
     const data = { ...this.state.data };
@@ -36,28 +55,6 @@ class CreatePostForm extends Form {
     try {
       const data = await api.createPost(model);
     } catch (error) {}
-  }
-
-  render() {
-    const { body: markdown } = this.state.data;
-
-    return (
-      <div className="">
-        <form>
-          {this.createInput("Title", "title")}
-          <ReactMde
-            value={markdown}
-            onChange={(value) => this.handleMarkdownChange(value)}
-            selectedTab={this.state.selectedTab}
-            onTabChange={(tab) => this.handleTabChange(tab)}
-            generateMarkdownPreview={(markdown) =>
-              Promise.resolve(this.state.converter.makeHtml(markdown))
-            }
-          />
-          {this.createButton("Submit")}
-        </form>
-      </div>
-    );
   }
 }
 

@@ -44,6 +44,7 @@ const NavBar = () => {
               Login
             </Link>
           </li>
+
           {!isLogged() && (
             <li className="nav-item active">
               <Link to="/registration" className="nav-link">

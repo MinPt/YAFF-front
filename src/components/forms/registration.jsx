@@ -1,8 +1,10 @@
-import Form from "../common/form";
+import GlobalForm from "../common/globalForm";
 import api from "../../gateways/CRADops/apiPost";
 import { toast } from "react-toastify";
+import Input from "../common/input";
+import * as yup from "yup";
 
-class Register extends Form {
+class Register extends GlobalForm {
   state = {
     data: {
       username: "",
@@ -11,12 +13,27 @@ class Register extends Form {
     },
     errors: {},
     apiResponse: {},
+    inputFields: [
+      <Input type="text" name="username" label="Username" />,
+      <Input type="text" name="email" label="Email" />,
+      <Input type="password" name="password" label="Password" />,
+    ],
   };
 
-  async handleSubmit(e) {
-    e.preventDefault();
+  schema = yup.object().shape({
+    username: yup.string().min(5).max(55).required(),
+    email: yup.string().email().required(),
+    password: yup
+      .string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        "Password should have: 1 lower character, 1 upper character, 1 numeric character, 1 special symbol and be at least 8 characters long"
+      )
+      .required(),
+  });
 
-    const model = { ...this.state.data };
+  handleSubmit = async (value) => {
+    const model = { ...value };
     try {
       const data = await api.registerUser(model);
       this.setState({ apiResponse: data });
@@ -30,18 +47,7 @@ class Register extends Form {
       }
       console.log(data);
     }
-  }
-
-  render() {
-    return (
-      <form>
-        {this.createInput("Username", "username")}
-        {this.createInput("Email", "email")}
-        {this.createInput("Password", "password")}
-        {this.createButton("Register")}
-      </form>
-    );
-  }
+  };
 }
 
 export default Register;

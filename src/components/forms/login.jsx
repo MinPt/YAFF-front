@@ -1,36 +1,33 @@
-import React, { Component } from "react";
-import Form from "../common/form";
 import api from "../../gateways/CRADops/apiPost";
-import isLogged from "../../utilities/isAuntificated";
+import GlobalForm from "../common/globalForm";
+import * as yup from "yup";
+import Input from "../common/input";
+import { withRouter } from "react-router-dom";
 
-class Login extends Form {
+class Login extends GlobalForm {
   state = {
     data: { email: "", password: "" },
     errors: {},
+    inputFields: [
+      <Input type="text" name="email" label="Email" />,
+      <Input type="password" name="password" label="Password" />,
+    ],
     apiResponse: {},
   };
 
-  async handleSubmit(e) {
-    e.preventDefault();
-    console.log(isLogged());
-    const model = { ...this.state.data };
-    try {
-      const data = await api.loginUser(model);
-      this.setState({ apiResponse: data });
-      localStorage.setItem("jwt", data.jwtToken);
-      this.props.history.push("/posts");
-    } catch (error) {}
+  handleSubmit = async (value) => {
+    const model = { ...value };
+
+    const data = await api.loginUser(model);
+    localStorage.setItem("jwt", data.jwtToken);
+    console.log(this.props.history);
+    this.props.history.push("/posts");
   }
 
-  render() {
-    return (
-      <form>
-        {this.createInput("Email", "email")}
-        {this.createInput("Password", "password")}
-        {this.createButton("Submit")}
-      </form>
-    );
-  }
+  schema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+  });
 }
 
-export default Login;
+export default withRouter(Login);
