@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import api from "../../gateways/api";
-import { domain } from "../../config.json";
+import api from "../../gateways/CRADops/apiGet";
 import { withRouter } from "react-router-dom";
 import Like from "../common/like";
 import Avatar from "../common/avatar";
+import ReactMarkdown from "react-markdown";
 
 class Post extends Component {
   state = {
@@ -13,7 +13,7 @@ class Post extends Component {
 
   async componentDidMount() {
     try {
-      const { data } = await api.get(`Posts/${this.props.match.params.id}`);
+      const data = await api.getSinglePost(this.props.match.params.id);
       const isLoaded = true;
       this.setState({ post: data });
       console.log(this.state);
@@ -35,12 +35,12 @@ class Post extends Component {
                 <div className="d-flex align-items-center">
                   <h3>{title}</h3>
                   <p>{datePosted}</p>
-                  <Avatar {...author}/>
+                  <Avatar {...author} />
                 </div>
                 <p>{author.nickName}</p>
               </div>
               <div>
-                <p>{body}</p>
+                <ReactMarkdown>{body}</ReactMarkdown>
                 <Like count={likesCount} />
               </div>
             </li>

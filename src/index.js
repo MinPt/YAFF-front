@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import "fontsource-roboto";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-mde/lib/styles/css/react-mde-all.css";
 import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.render(

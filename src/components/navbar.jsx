@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import isLogged from "../utilities/isAuntificated";
 import "bootstrap/js/src/collapse";
 
 const NavBar = () => {
@@ -26,6 +27,30 @@ const NavBar = () => {
               Posts
             </Link>
           </li>
+          {isLogged() && (
+            <li className="nav-item active">
+              <Link to="/createPost" className="nav-link">
+                Create Post
+              </Link>
+            </li>
+          )}
+          <li className="nav-item active">
+            <Link to="/markdown" className="nav-link">
+              Markdown
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+          </li>
+          {!isLogged() && (
+            <li className="nav-item active">
+              <Link to="/registration" className="nav-link">
+                Registration
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

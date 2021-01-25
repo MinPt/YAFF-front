@@ -1,17 +1,35 @@
-import api from "./api";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export class ForumApi {
-  constructor(_api) {
-    this.api = api;
-  }
+export const apiEndpoint = "https://localhost:5001/api/v1/";
+const domain = "https://localhost:5001/";
 
-  async getposts(pageSize = 10, page = 1) {
-    const { data } = await this.api.get(
-      `posts?pageSize=${pageSize}&page=${page}`
-    );
+export default class ForumApi {
+  constructor(apiEndpoint) {
+    this.api = axios.create({
+      baseURL: apiEndpoint,
+    });
 
-    return data;
+    this.api.interceptors.request.use((config) => {
+      const token = localStorage.getItem("jwt");
+
+      if (token !== null) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    });
+
+    this.api.interceptors.response.use(null, (error) => {
+      const expectedError =
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500;
+      if (!expectedError) {
+        toast.success("Unexpected error occurs");
+      }
+
+      return Promise.reject(error);
+    });
   }
 }
-
-export default new ForumApi(api);

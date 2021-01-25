@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import api from "../../gateways/api";
+import api from "../../gateways/CRADops/apiGet";
 import CommentItem from "./comment";
 
 class CommentList extends Component {
@@ -9,9 +9,7 @@ class CommentList extends Component {
   };
 
   async componentDidMount() {
-    const { data } = await api.get(
-      `posts/${this.props.match.params.id}/comments`
-    );
+    const data = await api.getComments(this.props.match.params.id);
     this.setState({ comments: data.comments });
     console.log(this.state.comments);
   }
@@ -21,7 +19,6 @@ class CommentList extends Component {
 
     return (
       (isVisible &&
-        
         comments.map((item) => {
           return <CommentItem key={item.id} {...item} />;
         })) || (
