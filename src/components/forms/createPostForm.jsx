@@ -1,53 +1,49 @@
 import React from "react";
 import GlobalForm from "../common/globalForm";
-import ReactMde from "react-mde";
 import api from "../../gateways/CRADops/apiPost";
 import * as Showdown from "showdown";
 import * as yup from "yup";
 import Input from "../common/input";
+import MDE from "../common/mde";
 
 class CreatePostForm extends GlobalForm {
-  state = {
-    data: {
-      body: "",
-      title: "",
-      tags: [],
-    },
-    converter: new Showdown.Converter({
-      tables: true,
-      simplifiedAutoLink: true,
-      strikethrough: true,
-      tasklists: true,
-    }),
-    inputFields: [
+  constructor(params) {
+    super(params);
+    this.state = {
+      data: {
+        body: "",
+        title: "",
+        tags: [],
+      },
+
+      converter: new Showdown.Converter({
+        tables: true,
+        simplifiedAutoLink: true,
+        strikethrough: true,
+        tasklists: true,
+      }),
+      selectedTab: "write",
+    };
+
+    this.state.inputFields = [
+      <Input type="text" name="email" label="Email" />,
       <Input type="text" name="title" label="Title" />,
-      <ReactMde
-        value={this.state.data.body}
-        onChange={(value) => this.handleMarkdownChange(value)}
-        selectedTab={this.state.selectedTab}
-        onTabChange={(tab) => this.handleTabChange(tab)}
-        generateMarkdownPreview={(markdown) =>
-          Promise.resolve(this.state.converter.makeHtml(markdown))
-        }
+      <MDE
+        name="body"
+        selectedTab={this.handleTabChange}
+        onTabChange={this.handleTabChange}
       />,
-    ],
-  };
+    ];
+  }
 
   schema = yup.object().shape({
-    body: yup.string().required().min(100),
     title: yup.string().required().min(15),
+    body: yup.string().required().min(100),
   });
 
-  handleMarkdownChange(value) {
-    const data = { ...this.state.data };
-    data.body = value;
-    this.setState({ data });
-  }
-
-  handleTabChange(tab) {
-    const newtab = tab;
-    this.setState({ selectedTab: newtab });
-  }
+  handleTabChange = (tab) => {
+    return tab === "write" ? "preview" : "write";
+  };
 
   async handleSubmit(e) {
     e.preventDefault();

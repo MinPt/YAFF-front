@@ -21,6 +21,7 @@
     "react-scripts": "4.0.1",
     "react-toastify": "^6.2.0",
     "showdown": "^1.9.1",
+    "simplemde": "^1.11.2",
     "web-vitals": "^0.2.4",
     "yup": "^0.32.8"
   },

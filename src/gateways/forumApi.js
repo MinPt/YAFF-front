@@ -13,7 +13,7 @@ export default class ForumApi {
     this.api.interceptors.request.use((config) => {
       const token = localStorage.getItem("jwt");
 
-      if (token !== null) {
+      if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
 
@@ -25,8 +25,9 @@ export default class ForumApi {
         error.response &&
         error.response.status >= 400 &&
         error.response.status < 500;
+      toast.error(error?.response?.data.message);
       if (!expectedError) {
-        toast.success("Unexpected error occurs");
+        toast.error("Unexpected error occurs");
       }
 
       return Promise.reject(error);

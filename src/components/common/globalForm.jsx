@@ -18,7 +18,7 @@ class GlobalForm extends Component {
 
   render() {
     const { data, inputFields } = this.state;
-
+    console.log("RERENDERED");
     return (
       <Formik
         initialValues={data}
@@ -28,7 +28,8 @@ class GlobalForm extends Component {
         {(props) => (
           <Form>
             {inputFields.map((item, i) => {
-              return item;
+              const newItem = { ...item, key: i };
+              return newItem;
             })}
             <button
               disabled={!props.isValid}

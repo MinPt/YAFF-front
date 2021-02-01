@@ -36,8 +36,8 @@ class Markdown extends Component {
       <div>
         <ReactMde
           value={this.state.markdown}
-          onChange={(value) => this.handleMarkdownChange(value)}
           selectedTab={this.state.selectedTab}
+          onChange={(value) => this.handleMarkdownChange(value)}
           onTabChange={(tab) => this.handleTabChange(tab)}
           generateMarkdownPreview={(markdown) =>
             Promise.resolve(this.state.converter.makeHtml(markdown))

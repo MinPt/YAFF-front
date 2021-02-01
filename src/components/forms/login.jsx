@@ -1,3 +1,4 @@
+import React from "react";
 import api from "../../gateways/CRADops/apiPost";
 import GlobalForm from "../common/globalForm";
 import * as yup from "yup";
@@ -22,7 +23,7 @@ class Login extends GlobalForm {
     localStorage.setItem("jwt", data.jwtToken);
     console.log(this.props.history);
     this.props.history.push("/posts");
-  }
+  };
 
   schema = yup.object().shape({
     email: yup.string().email().required(),
