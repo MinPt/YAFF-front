@@ -1,33 +1,31 @@
 import React from "react";
-import ReactMde from "react-mde";
-import * as Showdown from "showdown";
-import { useField, useFormikContext } from "formik";
+import { useField } from "formik";
 
 const MDE = (props) => {
+  const { name, value, onChange } = props;
   const [field, meta] = useField(props.name);
-  const { setFieldValue, values } = useFormikContext();
-  const converter = new Showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true,
-    strikethrough: true,
-    tasklists: true,
-  });
+  const foo = (e) => {
+    const value = e.currentTarget.value;
+    onChange(value);
+    field.onChange(e);
+  };
   return (
-    <div className="form-group">
-      <ReactMde
-        onTabChange={(value) => {
-          props.onTabChange(value);
-        }}
+    <React.Fragment>
+      <textarea
         {...field}
-        onChange={(value, e) => {
-          values[field.name] = value;
-          setFieldValue(value);
-        }}
-        generateMarkdownPreview={(markdown) =>
-          Promise.resolve(converter.makeHtml(markdown))
-        }
-      />
-    </div>
+        value={value}
+        onChange={(e) => foo(e)}
+        className="form-control"
+        name={name}
+        id={name}
+        cols="3"
+      >
+        {value}
+      </textarea>
+      {meta.touched && meta.error ? (
+        <div className="alert text-danger p-0 ml-2 w-">{meta.error}</div>
+      ) : null}
+    </React.Fragment>
   );
 };
 

@@ -33,7 +33,7 @@ class GlobalForm extends Component {
             })}
             <button
               disabled={!props.isValid}
-              className="btn btn-success"
+              className="btn btn-success mt-5"
               type="submit"
             >
               Submit

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactMarkdown from "react-markdown";
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 
