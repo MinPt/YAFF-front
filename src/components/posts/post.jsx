@@ -32,13 +32,19 @@ class Post extends Component {
         <React.Fragment>
           <div className="border mt-2">
             <li className="list-group-item">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
-                  <h3>{title}</h3>
-                  <p>{normalizeDate(dateAdded)}</p>
+              <div className="d-flex flex-column mb-3">
+                <div className="d-flex align-items-end mb-2  ">
+                  <p className="m-0">
+                    posted by <strong>{author.userName}</strong>
+                  </p>
                   <Avatar {...author} />
+                  <p className="m-0">
+                    <em>{normalizeDate(dateAdded)}</em>
+                  </p>
                 </div>
-                <p>{author.userName}</p>
+                <div className="d-flex align-items-center">
+                  <h1 className="font-weight-light text-center">{title}</h1>
+                </div>
               </div>
               <div>
                 <ReactMarkdown>{body}</ReactMarkdown>

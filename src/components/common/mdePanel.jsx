@@ -22,9 +22,13 @@ class MDEPanel extends Component {
     return (
       <div className="container p-0">
         <div className="mb-3">
-          
-            <span onClick={() => this.handleToggleMode()} class="material-icons" style={{"cursor": "pointer"}}>preview</span>
-       
+          <span
+            onClick={() => this.handleToggleMode()}
+            className="material-icons"
+            style={{ cursor: "pointer" }}
+          >
+            preview
+          </span>
         </div>
         <div>
           {this.state.isPrewiewMode ? (

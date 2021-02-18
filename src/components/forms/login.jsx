@@ -23,6 +23,7 @@ class Login extends GlobalForm {
     localStorage.setItem("jwt", data.jwtToken);
     console.log(this.props.history);
     this.props.history.push("/posts");
+    this.props.onLogin();
   };
 
   schema = yup.object().shape({

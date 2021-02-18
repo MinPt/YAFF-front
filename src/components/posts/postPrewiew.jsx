@@ -1,10 +1,10 @@
 import React from "react";
 import Like from "../common/like";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Avatar from "../common/avatar";
-import normalizeDate from "../../utilities/toHumanFriendlyDate";
-import ReactMarkdown from "react-markdown";
+import { useHistory } from "react-router-dom";
 import { domain } from "../../config.json";
+import normalizeDate from "../../utilities/toHumanFriendlyDate";
 const PostPreview = ({
   title,
   summary,
@@ -13,35 +13,54 @@ const PostPreview = ({
   likesCount,
   dateAdded,
   id,
+  tags,
 }) => {
   let history = useHistory();
 
   return (
-    <div
-      onClick={() => {
-        history.push(`/posts/${id}`);
-      }}
-      className="border mt-2"
-    >
-      <li className="list-group-item">
-        <div className="">
-          <div className="d-flex align-baseline">
-            <p>Posted by /u {author.userName}</p>
-            <Avatar {...author} />
-            <p>Posted : {normalizeDate(dateAdded)}</p>
-          </div>
-          <h3>{title}</h3>
+    <div className="my-5 border-bottom border-dark">
+      <div className="my-3 ">
+        <div className="d-flex align-items-end mb-2 ">
+          <small className="m-0">
+            Posted by
+            <Link
+              to={`/users/${author.id}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <strong className="ml-1">{author.userName}</strong>
+            </Link>
+          </small>
+
+          <Avatar {...author} />
+          <small className="m-0">
+            <em>Posted : {normalizeDate(dateAdded)}</em>
+          </small>
         </div>
-        <div className="d-flex flex-column ">
-          <img
-            src={domain + previewImage}
-            className="img-fluid mb-2"
-            alt="img"
-          />
-          <p>{summary}</p>
-          <Like count={likesCount} />
+        <div className="d-flex mb-2 flex-wrap ">
+          {tags.map((item) => (
+            <small
+              className="badge badge-primary mr-1"
+              style={{ cursor: "pointer" }}
+            >
+              {item}
+            </small>
+          ))}
         </div>
-      </li>
+        <h3
+          onClick={() => {
+            history.push(`/posts/${id}`);
+          }}
+          className=" "
+          style={{ cursor: "pointer" }}
+        >
+          {title}
+        </h3>
+      </div>
+      <div className="d-flex flex-column ">
+        <img src={domain + previewImage} className="img-fluid mb-2" alt="img" />
+        <p className="mt-2">{summary}</p>
+        <Like count={likesCount} />
+      </div>
     </div>
   );
 };

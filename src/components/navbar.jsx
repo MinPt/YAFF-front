@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import isLogged from "../utilities/isAuntificated";
 import "bootstrap/js/src/collapse";
 
-const NavBar = () => {
+const NavBar = (props) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/home" className="navbar-brand">
@@ -40,10 +40,30 @@ const NavBar = () => {
             </Link>
           </li>
           <li className="nav-item active">
-            <Link to="/login" className="nav-link">
-              Login
+            <Link to="/formik-form" className="nav-link">
+              formik-form
             </Link>
           </li>
+          {!isLogged() && (
+            <li className="nav-item active">
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+            </li>
+          )}
+          {isLogged() && (
+            <li
+              className="nav-item active"
+              onClick={() => {
+                localStorage.removeItem("jwt");
+                props.onLogout();
+              }}
+            >
+              <Link to="/" className="nav-link">
+                Logout
+              </Link>
+            </li>
+          )}
 
           {!isLogged() && (
             <li className="nav-item active">

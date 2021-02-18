@@ -19,6 +19,7 @@ const MDE = (props) => {
         name={name}
         id={name}
         cols="3"
+        rows="6"
       >
         {value}
       </textarea>

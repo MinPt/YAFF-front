@@ -21,6 +21,11 @@ class ApiGet extends ForumApi {
     const { data } = await this.api.get(`posts/${postId}/comments`);
     return data;
   }
+
+  async getUser(userId) {
+    const { data } = await this.api.get(`profiles/${userId}`);
+    return data;
+  }
 }
 
 export default new ApiGet(apiEndpoint);

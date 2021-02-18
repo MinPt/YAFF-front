@@ -3,7 +3,11 @@ export default function toHumanFriendlyDate(date) {
     return null;
   }
 
-  const inputDate = date instanceof Date ? date : new Date(date);
+  const inputDate =
+    date instanceof Date
+      ? date
+      : new Date(date.endsWith("Z") ? date : `${date}Z`);
+
   const currentDate = new Date();
 
   const timespanInMinutes = Math.floor((currentDate - inputDate) / 60000);

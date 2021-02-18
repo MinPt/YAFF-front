@@ -28,7 +28,8 @@ class GlobalForm extends Component {
         {(props) => (
           <Form>
             {inputFields.map((item, i) => {
-              const newItem = { ...item, key: i };
+              let newItem = { ...item, key: i };
+              newItem = React.cloneElement(newItem, { props: { ...props } });
               return newItem;
             })}
             <button
