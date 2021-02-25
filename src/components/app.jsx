@@ -15,6 +15,7 @@ import Register from "./forms/registration";
 import FormikForm from "./common/formikForm";
 import isLogged from "../utilities/isAuntificated";
 import UserProfile from "./profiles/profile";
+import api from "../gateways/CRADops/apiGet";
 
 class App extends Component {
   constructor(params) {
@@ -48,7 +49,17 @@ class App extends Component {
                 </React.Fragment>
               )}
             />
-            <Route path="/posts" component={Posts} />
+            <Route
+              path="/posts"
+              render={(props) => (
+                <Posts
+                  {...props}
+                  getData={(pageSize = 10, page = 1) =>
+                    api.getPosts(pageSize, page)
+                  }
+                />
+              )}
+            />
             <SecuredRoute path="/createPost">
               <CreatePostForm />
             </SecuredRoute>

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import api from "../../gateways/CRADops/apiGet";
+import apiGet from "../../gateways/CRADops/apiGet";
+import apiDelete from "../../gateways/CRADops/apiDelete";
 import { withRouter } from "react-router-dom";
 import Like from "../common/like";
 import Avatar from "../common/avatar";
 import ReactMarkdown from "react-markdown";
 import normalizeDate from "../../utilities/toHumanFriendlyDate";
-
+import { parseToken } from "../../utilities/parseToken";
 class Post extends Component {
   state = {
     post: {},
@@ -14,7 +15,7 @@ class Post extends Component {
 
   async componentDidMount() {
     try {
-      const data = await api.getSinglePost(this.props.match.params.id);
+      const data = await apiGet.getSinglePost(this.props.match.params.id);
       const isLoaded = true;
       this.setState({ post: data });
       console.log(this.state);
@@ -26,6 +27,14 @@ class Post extends Component {
 
   render() {
     const { title, body, author, likesCount, dateAdded, id } = this.state.post;
+
+    let UserId = "";
+    if (parseToken() !== undefined) {
+      const decoded = parseToken();
+      UserId = decoded.Id;
+    } else {
+      UserId = undefined;
+    }
 
     return (
       (this.state.isLoaded && (
@@ -49,6 +58,26 @@ class Post extends Component {
               <div>
                 <ReactMarkdown>{body}</ReactMarkdown>
                 <Like count={likesCount} />
+                {UserId == author.id && (
+                  <React.Fragment>
+                    <span
+                      className="material-icons"
+                      style={{ cursor: "pointer" }}
+                    >
+                      settings
+                    </span>
+                    <span
+                      className="material-icons"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        apiDelete.deletePost(id);
+                        this.props.history.replace("/posts");
+                      }}
+                    >
+                      delete
+                    </span>
+                  </React.Fragment>
+                )}
               </div>
             </li>
           </div>

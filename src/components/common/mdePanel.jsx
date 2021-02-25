@@ -18,6 +18,11 @@ class MDEPanel extends Component {
     this.setState({ markdown });
   };
 
+  componentDidMount() {
+    const value = this.props.value;
+    this.setState({ markdown: value });
+  }
+
   render() {
     return (
       <div className="container p-0">

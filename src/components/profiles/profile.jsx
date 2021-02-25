@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import api from "../../gateways/CRADops/apiGet";
+import Posts from "../posts/posts";
 import { domain } from "../../config.json";
+import { parseToken } from "../../utilities/parseToken";
+
 class UserProfile extends Component {
   state = {
     isLoaded: false,
@@ -19,6 +22,14 @@ class UserProfile extends Component {
   }
 
   render() {
+    let userId = "";
+    if (parseToken() !== undefined) {
+      const decoded = parseToken();
+      userId = decoded.Id;
+    } else {
+      userId = undefined;
+    }
+
     const {
       userName,
       userStatus,
@@ -42,6 +53,14 @@ class UserProfile extends Component {
                 <p className="ml-2">
                   <strong>registration date:</strong> <em>{regDate}</em>
                 </p>
+                {userId === this.props.match.params.id && (
+                  <span
+                    className="material-icons"
+                    style={{ cursor: "pointer" }}
+                  >
+                    settings
+                  </span>
+                )}
               </div>
               <div>
                 <p className="font-italic">{userStatus}</p>
@@ -49,6 +68,13 @@ class UserProfile extends Component {
             </div>
           </div>
           <div>{bio}</div>
+          <div>
+            <Posts
+              getData={(pageSize = 10, page = 1) =>
+                api.getUserPosts(this.props.match.params.id, pageSize, page)
+              }
+            />
+          </div>
         </div>
       )) || <div className="display-4">Loading</div>
     );

@@ -12,13 +12,13 @@ class Login extends GlobalForm {
     inputFields: [
       <Input type="text" name="email" label="Email" />,
       <Input type="password" name="password" label="Password" />,
+
     ],
     apiResponse: {},
   };
 
   handleSubmit = async (value) => {
     const model = { ...value };
-
     const data = await api.loginUser(model);
     localStorage.setItem("jwt", data.jwtToken);
     console.log(this.props.history);

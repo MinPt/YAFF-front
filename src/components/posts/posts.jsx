@@ -8,8 +8,8 @@ class Posts extends Component {
   };
 
   async componentDidMount() {
-    const data = await api.getPosts(20);
-    this.setState({ posts: data.posts });
+    const data = await this.props.getData(20);
+    this.setState({ posts: data.items });
   }
 
   render() {

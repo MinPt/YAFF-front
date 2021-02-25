@@ -5,6 +5,9 @@ import Avatar from "../common/avatar";
 import { useHistory } from "react-router-dom";
 import { domain } from "../../config.json";
 import normalizeDate from "../../utilities/toHumanFriendlyDate";
+import { parseToken } from "../../utilities/parseToken";
+
+
 const PostPreview = ({
   title,
   summary,
@@ -17,24 +20,34 @@ const PostPreview = ({
 }) => {
   let history = useHistory();
 
+  let UserId = "";
+  if (parseToken() !== undefined) {
+    const decoded = parseToken();
+    UserId = decoded.Id;
+  } else {
+    UserId = undefined;
+  }
   return (
     <div className="my-5 border-bottom border-dark">
       <div className="my-3 ">
-        <div className="d-flex align-items-end mb-2 ">
-          <small className="m-0">
-            Posted by
-            <Link
-              to={`/users/${author.id}`}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <strong className="ml-1">{author.userName}</strong>
-            </Link>
-          </small>
+        <div className="d-flex mb-2 ">
+          <div className="d-flex justify-content-between align-items-end">
+            <small className="m-0">
+              Posted by
+              <Link
+                to={`/users/${author.id}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <strong className="ml-1">{author.userName}</strong>
+              </Link>
+            </small>
 
-          <Avatar {...author} />
-          <small className="m-0">
-            <em>Posted : {normalizeDate(dateAdded)}</em>
-          </small>
+            <Avatar {...author} />
+            <small className="m-0">
+              <em>Posted : {normalizeDate(dateAdded)}</em>
+            </small>
+          </div>
+          
         </div>
         <div className="d-flex mb-2 flex-wrap ">
           {tags.map((item) => (

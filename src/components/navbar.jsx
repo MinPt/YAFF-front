@@ -1,9 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import isLogged from "../utilities/isAuntificated";
+import { parseToken } from "../utilities/parseToken";
 import "bootstrap/js/src/collapse";
 
 const NavBar = (props) => {
+  let Id = "";
+  if (parseToken() !== undefined) {
+    const decoded = parseToken();
+    Id = decoded.Id;
+  } else {
+    Id = undefined;
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/home" className="navbar-brand">
@@ -52,17 +61,24 @@ const NavBar = (props) => {
             </li>
           )}
           {isLogged() && (
-            <li
-              className="nav-item active"
-              onClick={() => {
-                localStorage.removeItem("jwt");
-                props.onLogout();
-              }}
-            >
-              <Link to="/" className="nav-link">
-                Logout
-              </Link>
-            </li>
+            <React.Fragment>
+              <li
+                className="nav-item active"
+                onClick={() => {
+                  localStorage.removeItem("jwt");
+                  props.onLogout();
+                }}
+              >
+                <Link to="/" className="nav-link">
+                  Logout
+                </Link>
+              </li>
+              <li className="nav-item active">
+                <Link to={`/users/${Id}`} className="nav-link">
+                  My profile
+                </Link>
+              </li>
+            </React.Fragment>
           )}
 
           {!isLogged() && (

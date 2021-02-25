@@ -1,64 +1,69 @@
 import React from "react";
-import GlobalForm from "../common/globalForm";
-import api from "../../gateways/CRADops/apiPost";
-import * as yup from "yup";
-import Input from "../common/input";
-import FileInput from "../common/fileInput";
+import { Form, Formik } from "formik";
 import MDEPanel from "../common/mdePanel";
+import api from "../../gateways/CRADops/apiPost";
+import Input from "../common/input";
+import * as yup from "yup";
 
-class CreatePostForm extends GlobalForm {
-  constructor(params) {
-    super(params);
-    this.state = {
-      data: {
-        body: "",
-        title: "",
-        tags: [],
-        previewImage: "",
-      },
-    };
-
-    this.state.inputFields = [
-      <Input type="text" name="title" label="Title" />,
-      <textarea
-        className="form-control"
-        name="previewBody"
-        label="Preview body"
-        cols="3"
-        rows="6"
-      />,
-      <FileInput
-        classes="custom-file-input"
-        type="file"
-        name="previewImage"
-        label="Preview image"
-      />,
-      <MDEPanel name="body" id="mdegovno" />,
-    ];
-  }
-
-  schema = yup.object().shape({
-    title: yup.string().required().min(15),
-    body: yup.string().required().min(100),
+const FormikForm = (props) => {
+  const schema = yup.object().shape({
+    title: yup.string().min(5).max(256).required(),
+    previewBody: yup.string().min(100).max(256).required(),
+    body: yup.string().min(256).required(),
+    previewImage: yup.mixed().required("file is required"),
   });
 
-  handleTabChange = (tab) => {
-    return tab === "write" ? "preview" : "write";
-  };
+  return (
+    <div>
+      <h1>My Form</h1>
+      <Formik
+        initialValues={{
+          title: "title",
+          previewImage: "",
+          previewBody: "previewBody",
+          body: "# BIDY",
+        }}
+        validationSchema={schema}
+        onSubmit={async (values) => {
+          const model = { ...values };
+          let formData = new FormData();
+          for (let key in model) {
+            if (key === "tags" && model[key].length === 0) {
+              continue;
+            }
+            formData.append(key, model[key]);
+          }
+          try {
+            const data = await api.createPost(formData);
+          } catch (error) {}
+        }}
+      >
+        {(props) => (
+          <Form onSubmit={props.handleSubmit}>
+            <Input
+              type="text"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.title}
+              name="title"
+            />
+            <Input
+              type="text"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.previewBody}
+              name="previewBody"
+            />
+            
+            <MDEPanel name="body" id="mdegovno" value={props.values.body} />
+            <button className="btn btn-success mt-3" type="submit">
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 
-  handleSubmit = async (value) => {
-    const model = { ...value };
-    let formData = new FormData();
-    for (let key in model) {
-      if (key === "tags" && model[key].length === 0) {
-        continue;
-      }
-      formData.append(key, model[key]);
-    }
-    try {
-      const data = await api.createPost(formData);
-    } catch (error) {}
-  };
-}
-
-export default CreatePostForm;
+export default FormikForm;

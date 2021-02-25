@@ -12,6 +12,13 @@ class ApiGet extends ForumApi {
     return data;
   }
 
+  async getUserPosts(userId, pageSize = 10, page = 1) {
+    const { data } = await this.api.get(
+      `posts/user/${userId}?PageSize=${pageSize}&Page=${page}`
+    );
+    return data;
+  }
+
   async getSinglePost(postId) {
     const { data } = await this.api.get(`Posts/${postId}`);
     return data;
