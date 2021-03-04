@@ -1,35 +1,55 @@
 import React from "react";
+import { Form, Formik } from "formik";
 import api from "../../gateways/CRADops/apiPost";
-import GlobalForm from "../common/globalForm";
 import * as yup from "yup";
 import Input from "../common/input";
 import { withRouter } from "react-router-dom";
 
-class Login extends GlobalForm {
-  state = {
-    data: { email: "", password: "" },
-    errors: {},
-    inputFields: [
-      <Input type="text" name="email" label="Email" />,
-      <Input type="password" name="password" label="Password" />,
-
-    ],
-    apiResponse: {},
-  };
-
-  handleSubmit = async (value) => {
-    const model = { ...value };
-    const data = await api.loginUser(model);
-    localStorage.setItem("jwt", data.jwtToken);
-    console.log(this.props.history);
-    this.props.history.push("/posts");
-    this.props.onLogin();
-  };
-
-  schema = yup.object().shape({
+const Login = (props) => {
+  const schema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
   });
-}
+  return (
+    <div>
+      <h1>Plese, concider to login</h1>
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        validationSchema={schema}
+        onSubmit={async (values) => {
+          const model = { ...values };
+          const data = await api.loginUser(model);
+          localStorage.setItem("jwt", data.jwtToken);
+          props.history.replace("/posts");
+          props.onLogin();
+        }}
+      >
+        {(props) => (
+          <Form>
+            <Input
+              type="text"
+              name="email"
+              placeholder="email"
+              className="form-control mt-3"
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="password"
+              className="form-control mt-3"
+            />
+
+            <button className="btn btn-success mt-3" type="submit">
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 
 export default withRouter(Login);

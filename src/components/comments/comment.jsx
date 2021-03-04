@@ -1,12 +1,14 @@
 import React from "react";
-import { domain } from "../../config.json";
+import Avatar from "../common/avatar";
+import normalizeDate from "../../utilities/toHumanFriendlyDate";
 
-const CommentItem = ({ body, author }) => {
+const CommentItem = ({ body, author, dateAdded }) => {
   return (
     <div className="border mt-2 p-3">
       <div>
-        <p>Posted by {author.nickName}</p>
-        <img src={domain + author.avatar} alt="AVATAR" />
+        comment by {author.userName}
+        <Avatar {...author} />
+        posted: {normalizeDate(dateAdded)}
       </div>
       <p>{body}</p>
     </div>

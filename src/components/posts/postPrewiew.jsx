@@ -5,8 +5,6 @@ import Avatar from "../common/avatar";
 import { useHistory } from "react-router-dom";
 import { domain } from "../../config.json";
 import normalizeDate from "../../utilities/toHumanFriendlyDate";
-import { parseToken } from "../../utilities/parseToken";
-
 
 const PostPreview = ({
   title,
@@ -20,13 +18,6 @@ const PostPreview = ({
 }) => {
   let history = useHistory();
 
-  let UserId = "";
-  if (parseToken() !== undefined) {
-    const decoded = parseToken();
-    UserId = decoded.Id;
-  } else {
-    UserId = undefined;
-  }
   return (
     <div className="my-5 border-bottom border-dark">
       <div className="my-3 ">
@@ -47,13 +38,13 @@ const PostPreview = ({
               <em>Posted : {normalizeDate(dateAdded)}</em>
             </small>
           </div>
-          
         </div>
         <div className="d-flex mb-2 flex-wrap ">
-          {tags.map((item) => (
+          {tags.map((item, i) => (
             <small
               className="badge badge-primary mr-1"
               style={{ cursor: "pointer" }}
+              key={i}
             >
               {item}
             </small>

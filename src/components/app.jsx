@@ -65,7 +65,9 @@ class App extends Component {
             </SecuredRoute>
             <Route
               path="/login"
-              render={(props) => <Login onLogin={this.handleAuthorization} />}
+              render={(props) => (
+                <Login onLogin={this.handleAuthorization} />
+              )}
             />
             <Route path="/formik-form" component={FormikForm} />
             <Route path="/registration" component={Register} />

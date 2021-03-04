@@ -5,30 +5,22 @@ import CommentItem from "./comment";
 class CommentList extends Component {
   state = {
     comments: [],
-    isVisible: false,
+    isLoaded: false,
   };
 
   async componentDidMount() {
     const data = await api.getComments(this.props.match.params.id);
-    this.setState({ comments: data.comments });
-    console.log(this.state.comments);
+    this.setState({ comments: data.items, isLoaded: true });
   }
 
   render() {
-    const { comments, isVisible } = this.state;
+    const { comments, isLoaded } = this.state;
 
     return (
-      (isVisible &&
+      (isLoaded &&
         comments.map((item) => {
           return <CommentItem key={item.id} {...item} />;
-        })) || (
-        <button
-          className="btn btn-primary"
-          onClick={() => this.setState({ isVisible: true })}
-        >
-          See comments
-        </button>
-      )
+        })) || <div></div>
     );
   }
 }

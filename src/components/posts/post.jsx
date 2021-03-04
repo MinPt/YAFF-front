@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-import apiGet from "../../gateways/CRADops/apiGet";
-import apiDelete from "../../gateways/CRADops/apiDelete";
-import { withRouter } from "react-router-dom";
 import Like from "../common/like";
 import Avatar from "../common/avatar";
 import ReactMarkdown from "react-markdown";
 import normalizeDate from "../../utilities/toHumanFriendlyDate";
+import CreateComment from "../forms/createComment";
+import { withRouter } from "react-router-dom";
+
+import apiGet from "../../gateways/CRADops/apiGet";
+import apiDelete from "../../gateways/CRADops/apiDelete";
 import { parseToken } from "../../utilities/parseToken";
+
 class Post extends Component {
   state = {
     post: {},
     isLoaded: false,
+    isWritingComment: false,
+  };
+
+  handleCommentCreation = () => {
+    this.setState({ isWritingComment: true });
   };
 
   async componentDidMount() {
@@ -57,30 +65,46 @@ class Post extends Component {
               </div>
               <div>
                 <ReactMarkdown>{body}</ReactMarkdown>
-                <Like count={likesCount} />
-                {UserId == author.id && (
-                  <React.Fragment>
-                    <span
-                      className="material-icons"
-                      style={{ cursor: "pointer" }}
-                    >
-                      settings
-                    </span>
-                    <span
-                      className="material-icons"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        apiDelete.deletePost(id);
-                        this.props.history.replace("/posts");
-                      }}
-                    >
-                      delete
-                    </span>
-                  </React.Fragment>
-                )}
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <Like count={likesCount} />
+                    {UserId == author.id && (
+                      <React.Fragment>
+                        <span
+                          className="material-icons"
+                          style={{ cursor: "pointer" }}
+                        >
+                          settings
+                        </span>
+                        <span
+                          className="material-icons"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            apiDelete.deletePost(id);
+                            this.props.history.replace("/posts");
+                          }}
+                        >
+                          delete
+                        </span>
+                      </React.Fragment>
+                    )}
+                  </div>
+
+                  <button
+                    className="btn btn-success"
+                    onClick={() => this.handleCommentCreation()}
+                  >
+                    Leave a comment
+                  </button>
+                </div>
               </div>
             </li>
           </div>
+          {this.state.isWritingComment && (
+            <div>
+              <CreateComment postId={id} />
+            </div>
+          )}
         </React.Fragment>
       )) || <div>Loading</div>
     );
