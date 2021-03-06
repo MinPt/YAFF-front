@@ -15,6 +15,7 @@ class Post extends Component {
     post: {},
     isLoaded: false,
     isWritingComment: false,
+    comments: [],
   };
 
   handleCommentCreation = () => {

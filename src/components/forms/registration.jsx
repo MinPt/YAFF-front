@@ -1,26 +1,12 @@
-import GlobalForm from "../common/globalForm";
+import React from "react";
+import { Form, Formik } from "formik";
 import api from "../../gateways/CRADops/apiPost";
-import { toast } from "react-toastify";
-import Input from "../common/input";
 import * as yup from "yup";
+import Input from "../common/input";
+import { withRouter } from "react-router-dom";
 
-class Register extends GlobalForm {
-  state = {
-    data: {
-      username: "",
-      email: "",
-      password: "",
-    },
-    errors: {},
-    apiResponse: {},
-    inputFields: [
-      <Input type="text" name="username" label="Username" />,
-      <Input type="text" name="email" label="Email" />,
-      <Input type="password" name="password" label="Password" />,
-    ],
-  };
-
-  schema = yup.object().shape({
+const Register = (props) => {
+  const schema = yup.object().shape({
     username: yup.string().min(5).max(55).required(),
     email: yup.string().email().required(),
     password: yup
@@ -32,22 +18,52 @@ class Register extends GlobalForm {
       .required(),
   });
 
-  handleSubmit = async (value) => {
-    const model = { ...value };
-    try {
-      const data = await api.registerUser(model);
-      this.setState({ apiResponse: data });
-      localStorage.setItem("jwt", data.jwtToken);
-      toast("You successfully registrated. Please consider to login.");
-      this.props.history.push("/login");
-    } catch (error) {
-      const data = error.response.data.errors;
-      for (let i in data) {
-        console.log(data[i], i.toLowerCase());
-      }
-      console.log(data);
-    }
-  };
-}
+  return (
+    <div>
+      <h1>Plese, concider to Register</h1>
+      <Formik
+        initialValues={{
+          username: "",
+          email: "",
+          password: "",
+        }}
+        validationSchema={schema}
+        onSubmit={async (values) => {
+          const model = { ...values };
+          const data = await api.registerUser(model);
+          toast("You successfully registrated. Please consider to login.");
+          this.props.history.push("/login");
+        }}
+      >
+        {(props) => (
+          <Form>
+            <Input
+              type="text"
+              name="username"
+              placeholder="email"
+              className="form-control mt-3"
+            />
+            <Input
+              type="text"
+              name="email"
+              placeholder="email"
+              className="form-control mt-3"
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="password"
+              className="form-control mt-3"
+            />
 
-export default Register;
+            <button className="btn btn-success mt-3" type="submit">
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default withRouter(Register);
